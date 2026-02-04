@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catastro Municipal - Rufino</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <h1>Catastro Municipal - Rufino</h1>
+    </header>
+
+    <div id="map-container">
+        <div id="map"></div>
+
+        <div class="search-floating">
+            <input type="text" id="searchInput" placeholder="Buscar por TGI o Partida...">
+        </div>
+
+        <div class="info-panel">
+            <div class="panel-header">
+                <span>Información</span>
+                <button id="minimize-btn" title="Minimizar">-</button>
+            </div>
+            <div class="panel-content" id="panel-content">
+                
+                <div class="section-title">Capas</div>
+                
+                <div class="layer-item">
+                    <div class="legend-color" style="background: #bdc3c7; border: 1px solid #34495e;"></div>
+                    <label>
+                        <input type="checkbox" id="toggleParcels" checked> Parcelas
+                    </label>
+                </div>
+
+                <div class="layer-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #3498db, #9b59b6);"></div>
+                    <label>
+                        <input type="checkbox" id="toggleSections" checked> Secciones
+                    </label>
+                </div>
+
+                <hr>
+                <div class="section-title">Datos Seleccionados</div>
+                <div id="info-seleccionada" style="font-size: 0.9em; color: #666;">
+                    <em>Haga clic en un lote para ver detalles aquí o en el mapa.</em>
+                </div>
+
+            </div>
+        </div>
+        
+        <div id="loading">Cargando datos del municipio...</div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="script.js"></script>
+
+</body>
+</html>

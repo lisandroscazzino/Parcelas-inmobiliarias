@@ -1,0 +1,196 @@
+/* --- RESET Y FUENTES --- */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* --- 1. ENCABEZADO SUPERIOR AMARILLO --- */
+.main-header {
+    background-color: #FCC444; /* Amarillo Municipal */
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 2000;
+}
+
+.main-header h1 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+
+/* --- 2. CONTENEDOR DEL MAPA --- */
+#map-container {
+    position: relative;
+    flex-grow: 1;
+    height: calc(100vh - 50px);
+    background-color: #e5e5e5; /* Fondo gris mientras carga */
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* --- 3. BARRA DE BÚSQUEDA --- */
+.search-floating {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    background: white;
+    border-radius: 30px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    padding: 5px 20px;
+    width: 300px;
+    transition: all 0.3s ease;
+}
+
+.search-floating:focus-within {
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    width: 320px;
+}
+
+.search-floating input {
+    width: 100%;
+    border: none;
+    padding: 10px 0;
+    font-size: 0.95rem;
+    font-family: 'Open Sans', sans-serif;
+    outline: none;
+}
+
+/* --- 4. PANEL DE INFORMACIÓN --- */
+.info-panel {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 280px;
+    background: white;
+    z-index: 1000;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    overflow: hidden;
+    font-size: 0.9rem;
+}
+
+.panel-header {
+    background-color: #FCC444;
+    padding: 10px 15px;
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#minimize-btn {
+    background: none;
+    border: none;
+    font-weight: 300;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #333;
+    padding: 0 5px;
+}
+
+.panel-content {
+    padding: 15px;
+    background: #fff;
+    max-height: 80vh; /* Evita que el panel sea más alto que la pantalla */
+    overflow-y: auto;
+}
+
+.section-title {
+    font-weight: 700;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.layer-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.layer-item label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.legend-color {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 15px 0;
+}
+
+/* --- INDICADOR DE CARGA --- */
+#loading {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(51, 51, 51, 0.9);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    z-index: 2000;
+    font-weight: 600;
+    display: none;
+}
+
+/* --- POPUP (VENTANA EMERGENTE) --- */
+.leaflet-popup-content-wrapper {
+    border-radius: 8px;
+    font-family: 'Open Sans', sans-serif;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+}
+
+.leaflet-popup-content {
+    margin: 10px;
+}
+
+.popup-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.popup-table td {
+    padding: 6px 4px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.9rem;
+}
+
+.popup-table tr:last-child td {
+    border-bottom: none;
+}
+
+.popup-table td:first-child {
+    font-weight: 700;
+    color: #555;
+    width: 40%;
+}
