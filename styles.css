@@ -1,0 +1,101 @@
+/* --- RESET Y FUENTES --- */
+body { margin: 0; padding: 0; font-family: 'Open Sans', sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+/* --- ENCABEZADO --- */
+.main-header { background-color: #FCC444; height: 50px; display: flex; align-items: center; padding: 0 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 2000; }
+.main-header h1 { font-size: 1.1rem; font-weight: 700; color: #333; margin: 0; }
+
+/* --- MAPA --- */
+#map-container { position: relative; flex-grow: 1; height: calc(100vh - 50px); background-color: #e5e5e5; }
+#map { width: 100%; height: 100%; z-index: 1; }
+
+/* --- BÚSQUEDA --- */
+.search-floating { position: absolute; top: 20px; left: 20px; z-index: 1000; background: white; border-radius: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.15); padding: 5px 20px; width: 300px; }
+.search-floating input { width: 100%; border: none; padding: 10px 0; font-size: 0.95rem; outline: none; }
+
+/* --- PANEL LATERAL --- */
+.info-panel { position: absolute; top: 20px; right: 20px; width: 300px; background: white; z-index: 1000; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); overflow: hidden; font-size: 0.9rem; display: flex; flex-direction: column; max-height: 85vh; }
+.panel-header { background-color: #FCC444; padding: 10px 15px; font-weight: 600; color: #333; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+#minimize-btn { background: none; border: none; font-weight: 700; font-size: 1.2rem; cursor: pointer; color: #333; }
+.panel-content { padding: 15px; background: #fff; overflow-y: auto; }
+
+.section-title { font-weight: 700; margin-bottom: 10px; font-size: 0.85rem; color: #555; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* ESTILOS DEL ÁRBOL DE CAPAS */
+.group-header { display: flex; align-items: center; padding: 5px 0; font-weight: 600; color: #333; user-select: none; cursor: pointer; }
+.group-header:hover { background-color: #f5f5f5; border-radius: 4px; }
+.arrow-icon { display: inline-block; width: 20px; text-align: center; font-size: 0.8rem; color: #666; transition: transform 0.2s; }
+.children-container { margin-left: 22px; border-left: 1px solid #eee; padding-left: 5px; max-height: 300px; overflow-y: auto; }
+.children-container::-webkit-scrollbar { width: 5px; }
+.children-container::-webkit-scrollbar-thumb { background-color: #ccc; border-radius: 3px; }
+
+.layer-item { display: flex; align-items: center; margin-bottom: 4px; cursor: pointer; font-size: 0.85rem; padding: 2px 0; }
+.layer-item label { cursor: pointer; display: flex; align-items: center; width: 100%; margin-left: 5px; color: #444; }
+.legend-color { width: 14px; height: 14px; margin-right: 8px; border-radius: 2px; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.1); }
+
+hr { border: 0; border-top: 1px solid #eee; margin: 15px 0; }
+#loading { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(51, 51, 51, 0.9); color: white; padding: 12px 25px; border-radius: 30px; z-index: 2000; font-weight: 600; display: none; }
+
+/* --- POPUP (VENTANA DE INFO) OPTIMIZADO --- */
+
+/* Contenedor general del globo */
+.leaflet-popup-content-wrapper { 
+    border-radius: 8px; 
+    padding: 0; 
+    overflow: hidden; /* Evita que contenido salga de bordes redondeados */
+}
+
+/* El contenido interno (donde va el texto) */
+.leaflet-popup-content { 
+    margin: 0 !important; /* Reseteamos margen por defecto de Leaflet */
+    width: 300px !important; /* Ancho fijo para estabilidad */
+    max-height: 320px; 
+    overflow-y: auto; /* Scroll vertical si es necesario */
+    padding: 25px 15px 15px 15px; /* Arriba 25px para dejar lugar a la X */
+    font-family: 'Open Sans', sans-serif;
+    line-height: 1.4;
+}
+
+/* Botón de cerrar (La X) - Mejor posicionado */
+.leaflet-container a.leaflet-popup-close-button {
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    font-size: 18px;
+    color: #888;
+    background: rgba(255, 255, 255, 0.9); /* Fondo semitransparente por si pisa texto */
+    border-radius: 50%; /* Redondo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    z-index: 10;
+}
+.leaflet-container a.leaflet-popup-close-button:hover {
+    color: #333;
+    background: #f0f0f0;
+}
+
+/* Estilo de la tabla dentro del popup */
+.popup-table { width: 100%; border-collapse: collapse; }
+.popup-table tr:nth-child(even) { background-color: #fcfcfc; }
+.popup-table td { 
+    padding: 8px 4px; 
+    border-bottom: 1px solid #eee; 
+    font-size: 0.85rem; 
+    color: #333; 
+    vertical-align: top;
+}
+.popup-table td:first-child { 
+    font-weight: 700; 
+    color: #666; 
+    width: 40%; 
+    padding-right: 10px;
+}
+
+/* Scrollbar personalizada para el Popup */
+.leaflet-popup-content::-webkit-scrollbar { width: 6px; }
+.leaflet-popup-content::-webkit-scrollbar-track { background: #f1f1f1; }
+.leaflet-popup-content::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+.leaflet-popup-content::-webkit-scrollbar-thumb:hover { background: #aaa; }
