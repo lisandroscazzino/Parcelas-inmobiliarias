@@ -2,19 +2,19 @@
 const VISTA_INICIAL = { lat: -34.266, lng: -62.712, zoom: 14 };
 
 const COLORES_FIJOS = {
-    "AREA INDUSTRIAL": "#3333ff",
-    "SECCION 1": "#33cc33",
-    "SECCION 1 - QUINTAS": "#b2ff66",
-    "SECCION 2": "#cc00cc",
-    "SECCION 3": "#66ffff",
-    "SECCION 3 - QUINTAS": "#009999",
-    "SECCION 4": "#ff99cc",
-    "SECCION 5": "#ffcc00",
-    "SECCION 5 - QUINTAS": "#996633",
-    "SECCION 6": "#ff6600",
-    "SECCION 7": "#999999",
-    "SECCION 8": "#ff3333",
-    "SECCION 9": "#9933ff"
+    "AREA INDUSTRIAL": "#ff00b3",
+    "SECCION 1": "#FF7F0E",
+    "SECCION 1 - QUINTAS": "#5f1405",
+    "SECCION 2": "#ff0000",
+    "SECCION 3": "#8400ff",
+    "SECCION 3 - QUINTAS": "#01db01c7",
+    "SECCION 4": "#0044ff",
+    "SECCION 5": "#7F7F7F",
+    "SECCION 5 - QUINTAS": "#acac00",
+    "SECCION 6": "#00e1ff",
+    "SECCION 7": "#0f0b0b",
+    "SECCION 8": "#f4f800",
+    "SECCION 9": "#00CED1"
 };
 const PALETA_DEFAULT = ["#3498db", "#e74c3c", "#f1c40f", "#2ecc71", "#9b59b6", "#34495e"];
 
@@ -24,7 +24,7 @@ let estadoSecciones = {};
 const renderizador = L.canvas({ padding: 0.5 });
 
 const ESTILOS = {
-    parcela: { color: "#555", weight: 1, fillColor: "#ecf0f1", fillOpacity: 0.5, renderer: renderizador },
+    parcela: { color: "#555", weight: 1, fillColor: "#ecf0f1", fillOpacity: 0.01, renderer: renderizador },
     parcelaHover: { color: "#e67e22", weight: 2, fillColor: "#f39c12", fillOpacity: 0.7, renderer: renderizador },
     parcelaSeleccionada: { color: "#c0392b", weight: 3, fillColor: "#e74c3c", fillOpacity: 0.8, renderer: renderizador }
 };
@@ -55,7 +55,10 @@ function obtenerColorSeccion(nombre) {
 // --- 3. INICIAR MAPA ---
 const map = L.map('map', { zoomControl: false, preferCanvas: true }).setView([VISTA_INICIAL.lat, VISTA_INICIAL.lng], VISTA_INICIAL.zoom);
 L.control.zoom({ position: 'bottomleft' }).addTo(map);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: 'Map data &copy; OpenStreetMap', maxZoom: 19 }).addTo(map);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+    attribution: 'Map data &copy; OpenStreetMap', 
+    maxZoom: 19 
+}).addTo(map);
 
 let capaParcelas = null;
 let capaSecciones = null;
@@ -153,9 +156,7 @@ function seleccionarParcela(layer) {
     layer.setStyle(ESTILOS.parcelaSeleccionada);
     layer.bringToFront();
     
-    // Zoom suave
-    map.flyToBounds(layer.getBounds(), { padding: [100, 100], maxZoom: 19, duration: 0.5 });
-    
+    // --- ARMADO DEL POPUP ---
     const p = layer.feature.properties;
 
     const CAMPOS_POPUP = [
@@ -191,23 +192,37 @@ function seleccionarParcela(layer) {
     
     const contenidoPopup = `<table class="popup-table">${filasHTML}</table>`;
     
-    // Configuración robusta del Popup
+    // 1. Asignamos el popup pero apagamos el autoPan de Leaflet
+    // porque lo haremos manualmente con flyToBounds mejorado
     layer.bindPopup(contenidoPopup, {
         maxWidth: 300,
-        minWidth: 300,        // Fuerza el ancho fijo para evitar saltos
+        minWidth: 300,
         maxHeight: 320,
-        autoPan: true,        // Mueve el mapa para que entre el popup
-        autoPanPadding: [50, 50], // Deja margen con el borde de la pantalla
+        autoPan: false, 
         closeButton: true
     }).openPopup();
+
+    // 2. MOVIMIENTO DE CÁMARA MEJORADO (Aquí está la corrección visual)
+    // paddingTopLeft: [x, y]. Ponemos 350px en Y (arriba) para dejar sitio al popup.
+    // paddingBottomRight: [x, y]. Ponemos 320px en X (derecha) para que no se esconda tras el panel lateral.
+    map.flyToBounds(layer.getBounds(), { 
+        paddingTopLeft: [50, 350],  
+        paddingBottomRight: [320, 50],
+        maxZoom: 19, 
+        duration: 0.8,
+        animate: true
+    });
 
     // Actualizar panel lateral resumen
     const tgi = obtenerValorSeguro(p, "TGI");
     const titular = obtenerValorSeguro(p, "Tit. Nombre");
-    document.getElementById('info-seleccionada').innerHTML = `
+    const divInfo = document.getElementById('info-seleccionada');
+    if(divInfo) {
+        divInfo.innerHTML = `
         <strong>Selección:</strong><br>
         Titular: ${titular} <br>
         TGI: ${tgi}`;
+    }
 }
 
 // --- 6. CARGA DE DATOS ---
@@ -255,7 +270,7 @@ async function cargarCapas() {
         }
     } catch (e) {
         console.error(e);
-        alert("Error cargando archivos.");
+        alert("Error cargando archivos GeoJSON (Asegúrate de ejecutar esto en un Servidor Local, no abriendo el archivo HTML directo).");
     } finally {
         divCarga.style.display = 'none';
     }
@@ -265,7 +280,9 @@ cargarCapas();
 
 // --- 7. BÚSQUEDA ---
 const inputBusqueda = document.getElementById('searchInput');
-inputBusqueda.addEventListener('keydown', (e) => { if (e.key === 'Enter') buscarParcela(inputBusqueda.value); });
+if(inputBusqueda){
+    inputBusqueda.addEventListener('keydown', (e) => { if (e.key === 'Enter') buscarParcela(inputBusqueda.value); });
+}
 
 function buscarParcela(texto) {
     if (!capaParcelas) return;
@@ -287,15 +304,20 @@ function buscarParcela(texto) {
     if (!found) alert("No encontrado (Busque por TGI, Partida o Titular).");
 }
 
-document.getElementById('toggleParcels').addEventListener('change', (e) => {
-    if(capaParcelas) e.target.checked ? map.addLayer(capaParcelas) : map.removeLayer(capaParcelas);
-});
+const toggleParcelsBtn = document.getElementById('toggleParcels');
+if(toggleParcelsBtn){
+    toggleParcelsBtn.addEventListener('change', (e) => {
+        if(capaParcelas) e.target.checked ? map.addLayer(capaParcelas) : map.removeLayer(capaParcelas);
+    });
+}
 
 const btnMin = document.getElementById('minimize-btn');
 const panelContent = document.getElementById('panel-content');
 let panelVisible = true;
-btnMin.addEventListener('click', () => {
-    panelVisible = !panelVisible;
-    panelContent.style.display = panelVisible ? 'block' : 'none';
-    btnMin.textContent = panelVisible ? '-' : '+';
-});
+if(btnMin && panelContent){
+    btnMin.addEventListener('click', () => {
+        panelVisible = !panelVisible;
+        panelContent.style.display = panelVisible ? 'block' : 'none';
+        btnMin.textContent = panelVisible ? '-' : '+';
+    });
+}
